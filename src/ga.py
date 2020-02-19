@@ -50,7 +50,7 @@ class Individual_Grid(object):
             pathPercentage=0.5,
             emptyPercentage=0.6,
             linearity=-0.5,
-            solvability=10.0
+            solvability=2.0
         )
         self._fitness = sum(map(lambda m: coefficients[m] * measurements[m],
                                 coefficients))
@@ -177,12 +177,12 @@ class Individual_DE(object):
         # STUDENT Add more metrics?
         # STUDENT Improve this with any code you like
         coefficients = dict(
-            meaningfulJumpVariance=0.5,
-            negativeSpace=0.6,
+            meaningfulJumpVariance=0.6,
+            negativeSpace=0.5,
             pathPercentage=0.5,
             emptyPercentage=0.6,
             linearity=-0.5,
-            solvability=2.0
+            solvability=8.0
         )
         penalties = 0
         # STUDENT For example, too many stairs are unaesthetic.  Let's penalize that
@@ -364,10 +364,37 @@ Individual = Individual_Grid
 
 def generate_successors(population):
     results = []
+    item_list = []
+    item_fit = []
+    item_res = []
+    tf = 0
+    #j = 4
+    pop_fit = [] # holds values selected
+    #q = [] # queue
+
     # STUDENT Design and implement this
     # Hint: Call generate_children() on some individuals and fill up results.
 
-    for i in range(0, len(population) - 1):
+    #elitist:
+    for item in population:
+        item.calculate_fitness()
+        item_list.append(item)
+        if item.fitness() >= 0 or item.fitness() <= 0:
+            item_fit = (item_fit + item.fitness())
+        item_list = sorted(item_list, key=lambda obj: obj.fitness())[::-1]
+
+    for item in range(0,22):
+        if len(item_list) is 0:
+            break
+        results.append(item_list.pop())
+    print("poo")
+    return results
+
+    #roulette
+    #for Individual in population:
+
+
+    '''for i in range(0, len(population) - 1):
         children = population[i].generate_children(population[i + 1])
 
         # Defaults to random selection
@@ -382,7 +409,7 @@ def generate_successors(population):
         results.append(best_child)
         i += 2
 
-    return results
+    return results'''
 
 
 def ga():
@@ -425,7 +452,7 @@ def ga():
                 generation += 1
                 # STUDENT Determine stopping condition
                 stop_condition = False
-                if stop_condition:
+                if stop_condition or generation > 20:
                     break
                 # STUDENT Also consider using FI-2POP as in the Sorenson & Pasquier paper
                 gentime = time.time()
@@ -445,6 +472,7 @@ def ga():
 
 
 if __name__ == "__main__":
+    print("shite")
     final_gen = sorted(ga(), key=Individual.fitness, reverse=True)
     best = final_gen[0]
     print("Best fitness: " + str(best.fitness()))
