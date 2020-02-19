@@ -68,31 +68,46 @@ class Individual_Grid(object):
         # STUDENT also consider weighting the different tile types so it's not uniformly random
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
 
-        left = 1
-        right = width - 1
-        for y in range(height):
-            for x in range(left, right):
-                pass
-        return genome
+        new_genome = copy.deepcopy(genome)
+        if random.randint(1, 100) >= 80:
+            left = 1
+            right = width - 1
+            for y in range(height):
+                for x in range(left, right):
+                    new_option = random.randint(0, 8)
+                    new_genome[y][x] = options[new_option]
+
+        return new_genome
 
     # Create zero or more children from self and other
     def generate_children(self, other):
-        new_genome = copy.deepcopy(self.genome)
-        other_genome = copy.deepcopy(other.genome)
+        genome_a = copy.deepcopy(self.genome)
+        genome_b = copy.deepcopy(other.genome)
         # Leaving first and last columns alone...
         # do crossover with other
-        #single-point crossover
         left = 1
         right = width - 1
+
+        #x_point = random.randint(left, right)
+        #y_point = random.randint(0, height)
+
+        # Uses uniform crossover
         for y in range(height):
             for x in range(left, right):
                 # STUDENT Which one should you take?  Self, or other?  Why?
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
-                other_genome[x][y] = self.genome[x][y]
-                new_genome[x][y] = other.genome[x][y]
+
+                if random.randint(1, 2) == 2:
+                    genome_a[y][x] = other.genome[y][x]
+
+                if random.randint(1, 2) == 2:
+                    genome_b[y][x] = other.genome[y][x]
+
         # do mutation; note we're returning a one-element tuple here
 
-        return (Individual_Grid(self.mutate(new_genome)),Individual_Grid(self.mutate(other_genome)))
+        #return (Individual_Grid(new_genome),)
+        return (Individual_Grid(self.mutate(genome_a)), Individual_Grid(self.mutate(genome_b)))
+
 
     # Turn the genome into a level string (easy for this genome)
     def to_level(self):
@@ -186,7 +201,7 @@ class Individual_DE(object):
     def mutate(self, new_genome):
         # STUDENT How does this work?  Explain it in your writeup.
         # STUDENT consider putting more constraints on this, to prevent generating weird things
-        if random.random() < 0.3  and len(new_genome) > 0:
+        if random.random() < 0.1 and len(new_genome) > 0:
             to_change = random.randint(0, len(new_genome) - 1)
             de = new_genome[to_change]
             new_de = de
@@ -351,6 +366,22 @@ def generate_successors(population):
     results = []
     # STUDENT Design and implement this
     # Hint: Call generate_children() on some individuals and fill up results.
+
+    for i in range(0, len(population) - 1):
+        children = population[i].generate_children(population[i + 1])
+
+        # Defaults to random selection
+        best_child = children[random.randint(0, 1)]
+
+        # 50% chance to instead choose elitist selection
+        if random.randint(0, 1) == 1:
+            best_child = children[0]
+            if children[1].fitness() > children[0].fitness():
+                best_child = children[1]
+
+        results.append(best_child)
+        i += 2
+
     return results
 
 
