@@ -186,7 +186,7 @@ class Individual_DE(object):
     def mutate(self, new_genome):
         # STUDENT How does this work?  Explain it in your writeup.
         # STUDENT consider putting more constraints on this, to prevent generating weird things
-        if random.random() < 0.1 and len(new_genome) > 0:
+        if random.random() < 0.3  and len(new_genome) > 0:
             to_change = random.randint(0, len(new_genome) - 1)
             de = new_genome[to_change]
             new_de = de
