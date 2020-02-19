@@ -88,8 +88,8 @@ class Individual_Grid(object):
             for x in range(left, right):
                 # STUDENT Which one should you take?  Self, or other?  Why?
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
-                other_genome[row][range] = self.genome[row][range]
-                new_genome[row][range] = other.genome[row][range]
+                other_genome[x][y] = self.genome[x][y]
+                new_genome[x][y] = other.genome[x][y]
         # do mutation; note we're returning a one-element tuple here
 
         return (Individual_Grid(self.mutate(new_genome)),Individual_Grid(self.mutate(other_genome)))
