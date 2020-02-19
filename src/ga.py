@@ -106,7 +106,7 @@ class Individual_Grid(object):
         # do mutation; note we're returning a one-element tuple here
 
         #return (Individual_Grid(new_genome),)
-        return (Individual_Grid(self.mutate(genome_a)), Individual_Grid(self.mutate(genome_b)))
+        return (Individual_Grid(genome_a), Individual_Grid(genome_b))
 
 
     # Turn the genome into a level string (easy for this genome)
@@ -359,7 +359,7 @@ class Individual_DE(object):
         return Individual_DE(g)
 
 
-Individual = Individual_Grid
+Individual = Individual_DE
 
 
 def generate_successors(population):
