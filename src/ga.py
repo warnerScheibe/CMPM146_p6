@@ -91,8 +91,8 @@ class Individual_Grid(object):
                 other_genome[row][range] = self.genome[row][range]
                 new_genome[row][range] = other.genome[row][range]
         # do mutation; note we're returning a one-element tuple here
-        #umm
-        return (Individual_Grid(new_genome),Individual_Grid(other_genome))
+
+        return (Individual_Grid(self.mutate(new_genome)),Individual_Grid(self.mutate(other_genome)))
 
     # Turn the genome into a level string (easy for this genome)
     def to_level(self):
